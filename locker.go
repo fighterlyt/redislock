@@ -103,8 +103,8 @@ func (m *mutex) Lock() error {
 				ticker.Stop()
 				return
 			case <-ticker.C: // 到期,自动续期
-				expired, err := m.mutex.Extend()
-				if err != nil || expired { // 如果加锁失败，或者已经逾期，清理内部数据
+				ok, err := m.mutex.Extend()
+				if err != nil || !ok { // 如果加锁失败，或者已经逾期，清理内部数据
 					ticker.Stop()
 
 					m.lock.Lock()
